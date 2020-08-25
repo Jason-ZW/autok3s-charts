@@ -1,0 +1,41 @@
+## String to specify terway mode, default is vpc mode
+##
+mode: vpc
+
+## String to specify alibaba cloud vSwitches
+vswitches: {}
+
+## String to specify alibaba cloud accessKey
+##
+accessKey: ""
+
+## String to specify alibaba cloud accessSecret
+##
+accessSecret: ""
+
+## String to specify alibaba cloud securityGroup
+securityGroup: ""
+
+## String to partially override terway.fullname template (will maintain the release name)
+##
+# nameOverride:
+
+## String to fully override terway.fullname template
+##
+# fullnameOverride:
+
+## Pods Service Account
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
+serviceAccount:
+  ## Specifies whether a ServiceAccount should be created
+  ##
+  create: false
+  ## The name of the ServiceAccount to use.
+  ## If not set and create is true, a name is generated using the terway.fullname template
+  # name:
+
+## Role Based Access
+## Ref: https://kubernetes.io/docs/admin/authorization/rbac/
+##
+rbac:
+  create: false

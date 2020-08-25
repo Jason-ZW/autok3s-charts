@@ -1,0 +1,18 @@
+apiVersion: v1
+name: terway
+version: 0.1
+appVersion: 1.0.10
+description: CNI plugin for Alibaba Cloud VPC/ENI.
+keywords:
+  - network
+  - cni
+  - vpc
+  - eni
+home: https://github.com/AliyunContainerService/terway
+icon: file://../terway-220x234.png
+sources:
+  - https://github.com/AliyunContainerService/terway
+maintainers:
+  - name: Jason-ZW
+    email: zhenyang@rancher.com
+engine: gotpl
