@@ -12,7 +12,7 @@ The following table lists the configurable parameters of the Terway chart and th
 | `accessKey`                                 | Alibaba cloud accessKey.                            | `nil`                                                             |
 | `accessSecret`                              | Alibaba cloud accessSecret.                         | `nil`                                                             |
 | `securityGroup`                             | Alibaba security group.                             | `nil`                                                             |
-| `vSwitches`                                 | Alibaba vSwitches(eni only).                        | `{}`                                                              |
+| `vSwitches`                                 | Alibaba vSwitches(eni only).                        | `nil`                                                             |
 | `rbac.create`                               | Create and use RBAC resources                       | `false`                                                           |
 | `serviceAccount.create`                     | Specifies whether a ServiceAccount should be created | `false`                                                          |
 | `serviceAccount.name`                       | The name of the ServiceAccount to create            | Generated using the terway.fullname template                      |

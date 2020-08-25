@@ -3,7 +3,7 @@
 mode: vpc
 
 ## String to specify alibaba cloud vSwitches
-vswitches: {}
+vSwitches: ""
 
 ## String to specify alibaba cloud accessKey
 ##
@@ -18,11 +18,11 @@ securityGroup: ""
 
 ## String to partially override terway.fullname template (will maintain the release name)
 ##
-# nameOverride:
+nameOverride:
 
 ## String to fully override terway.fullname template
 ##
-# fullnameOverride:
+fullnameOverride:
 
 ## Pods Service Account
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
@@ -39,3 +39,5 @@ serviceAccount:
 ##
 rbac:
   create: false
+
+eniConfig: ""

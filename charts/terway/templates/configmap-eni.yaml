@@ -1,0 +1,32 @@
+{{- if eq .Values.mode "eni" }}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ template "terway.fullname" . }}
+  namespace: kube-system
+  labels:
+    app: {{ template "terway.name" . | quote }}
+    chart: {{ template "terway.chart" . | quote }}
+    release: {{ .Release.Name | quote }}
+    heritage: {{ .Release.Service | quote }}
+data:
+  eni_conf: |
+    {
+      "version": "1",
+      "access_key": {{ quote .Values.accessKey }},
+      "access_secret": {{ quote .Values.accessSecret }},
+      "service_cidr": "10.96.0.0/12",
+      "security_group": {{ .Values.securityGroup | quote }},
+      "vswitches": {{ toJson .Values.vSwitches }},
+      "max_pool_size": 5,
+      "min_pool_size": 0
+    }
+  10-terway.conf: |
+    {
+      "cniVersion": "0.3.0",
+      "name": "terway",
+      "eniip_virtual_type": "Veth",
+      "type": "terway"
+    }
+  disable_network_policy: "false"
+{{- end }}

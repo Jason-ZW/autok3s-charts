@@ -1,3 +1,4 @@
+{{- if eq .Values.mode "vpc" }}
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -29,21 +30,27 @@ spec:
       serviceAccountName: {{ template "terway.serviceAccountName" . }}
       hostNetwork: true
       initContainers:
+        - name: { { template "terway.name" . } }-cni-installer
+          image: zhenyangzhao/cni-installer:v0.8.6
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            privileged: true
+          command:
+            - 'sh'
+            - '-c'
+            - 'cp -r /opt/cni-installer/bin/* /opt/cni/bin/; chmod a+x /opt/cni/bin/;'
+          volumeMounts:
+            - name: cni-bin
+              mountPath: /opt/cni/bin/
         - name: {{ template "terway.name" . }}-init
           image: registry.aliyuncs.com/acs/terway:v1.0.10.122-gd0be015-aliyun
           imagePullPolicy: IfNotPresent
           securityContext:
             privileged: true
           command:
-            {{- if eq .Values.mode "vpc" }}
             - 'sh'
             - '-c'
             - 'cp /usr/bin/terway /opt/cni/bin/; chmod +x /opt/cni/bin/terway; cp /etc/eni/10-terway.conf /etc/cni/net.d/; modprobe sch_htb || true'
-            {{- else if eq .Values.mode "eni" }}
-            - 'sh'
-            - '-c'
-            - 'cp /usr/bin/terway /opt/cni/bin/;chmod +x /opt/cni/bin/terway;cp /etc/eni/10-terway.conf /etc/cni/net.d/;sysctl -w net.ipv4.conf.eth0.rp_filter=0;modprobe sch_htb || true;chroot /host sh -c "systemctl disable eni.service; rm -f /etc/udev/rules.d/75-persistent-net-generator.rules /lib/udev/rules.d/60-net.rules /lib/udev/rules.d/61-eni.rules /lib/udev/write_net_rules && udevadm control --reload-rules && udevadm trigger; true"'
-            {{- end }}
           volumeMounts:
             - name: configvolume
               mountPath: /etc/eni
@@ -53,10 +60,6 @@ spec:
               mountPath: /etc/cni/net.d/
             - mountPath: /lib/modules
               name: lib-modules
-            {{- if eq .Values.mode "eni" }}
-            - mountPath: /host
-              name: host-root
-            {{- end }}
       containers:
         - name: {{ template "terway.name" . }}
           image: registry.aliyuncs.com/acs/terway:v1.0.10.122-gd0be015-aliyun
@@ -158,9 +161,4 @@ spec:
           hostPath:
             path: /var/lib/kubelet/device-plugins
             type: "Directory"
-        {{- if eq .Values.mode "eni" }}
-        - name: host-root
-          hostPath:
-            path: /
-            type: "Directory"
-        {{- end }}
+{{- end }}
