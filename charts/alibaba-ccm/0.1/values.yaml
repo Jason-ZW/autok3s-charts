@@ -1,0 +1,32 @@
+## String to specify alibaba cloud accessKey
+##
+accessKey: ""
+
+## String to specify alibaba cloud accessSecret
+##
+accessSecret: ""
+
+## String to specify cluster cidr
+##
+clusterCIDR: ""
+
+## String to partially override alibaba-ccm.fullname template (will maintain the release name)
+##
+nameOverride:
+
+## String to fully override alibaba-ccm.fullname template
+##
+fullnameOverride:
+
+## Pods Service Account
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
+serviceAccount:
+  ## Specifies whether a ServiceAccount should be created
+  ##
+  create: false
+
+## Role Based Access
+## Ref: https://kubernetes.io/docs/admin/authorization/rbac/
+##
+rbac:
+  create: false

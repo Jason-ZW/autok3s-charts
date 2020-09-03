@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app: "alibaba-ccm"
+    chart: "alibaba-ccm.chart"
+    release: "alibaba-ccm"
+    heritage: "alibaba-ccm"
+    tier: control-plane
+  name: cloud-controller-manager
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      app: "alibaba-ccm"
+      tier: control-plane
+  template:
+    metadata:
+      labels:
+        app: "alibaba-ccm"
+        tier: control-plane
+      annotations:
+        scheduler.alpha.kubernetes.io/critical-pod: ''
+    spec:
+      serviceAccountName: cloud-controller-manager
+      tolerations:
+        - effect: NoSchedule
+          operator: Exists
+          key: node-role.kubernetes.io/master
+        - effect: NoSchedule
+          operator: Exists
+          key: node.cloudprovider.kubernetes.io/uninitialized
+      nodeSelector:
+        node-role.kubernetes.io/master: "true"
+      containers:
+        - command:
+            -  /cloud-controller-manager
+            - --kubeconfig=/etc/kubernetes/k3s.yaml
+            - --address=127.0.0.1
+            - --allow-untagged-cloud=true
+            - --leader-elect=true
+            - --cloud-provider=alicloud
+            - --allocate-node-cidrs=true
+            - --cluster-cidr={{.Values.clusterCIDR}}
+            - --use-service-account-credentials=true
+            - --route-reconciliation-period=30s
+            - --v=5
+          image: registry.cn-hangzhou.aliyuncs.com/acs/cloud-controller-manager-amd64:v1.9.3.10-gfb99107-aliyun
+          env:
+            - name: ACCESS_KEY_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: cloud-config
+                  key: special.keyid
+            - name: ACCESS_KEY_SECRET
+              valueFrom:
+                configMapKeyRef:
+                  name: cloud-config
+                  key: special.keysecret
+          livenessProbe:
+            failureThreshold: 8
+            httpGet:
+              host: 127.0.0.1
+              path: /healthz
+              port: 10252
+              scheme: HTTP
+            initialDelaySeconds: 15
+            timeoutSeconds: 15
+          name: cloud-controller-manager
+          resources:
+            requests:
+              cpu: 200m
+          volumeMounts:
+            - mountPath: /etc/kubernetes/
+              name: k8s
+              readOnly: true
+            - mountPath: /etc/ssl/certs
+              name: certs
+            - mountPath: /etc/pki
+              name: pki
+      hostNetwork: true
+      volumes:
+        - hostPath:
+            path: /etc/rancher/k3s
+          name: k8s
+        - hostPath:
+            path: /etc/ssl/certs
+          name: certs
+        - hostPath:
+            path: /etc/pki
+          name: pki

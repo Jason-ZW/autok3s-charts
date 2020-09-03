@@ -1,0 +1,13 @@
+apiVersion: v2
+name: alibaba-ccm
+version: 0.1
+appVersion: v1.9.3.239
+description: Cloud Controller Manager for Alibaba.
+keywords:
+  - ccm
+  - alibaba
+home: https://github.com/kubernetes/cloud-provider-alibaba-cloud
+icon: file://../alibaba-ccm-220x234.png
+type: application
+sources:
+  - https://github.com/kubernetes/cloud-provider-alibaba-cloud
