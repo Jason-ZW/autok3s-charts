@@ -13,3 +13,4 @@ The following table lists the configurable parameters of the alibaba cloud-contr
 | `clusterCIDR`                               | Specifies cluster CIDR                              | `nil`                                                             |
 | `rbac.create`                               | Create and use RBAC resources                       | `false`                                                           |
 | `serviceAccount.create`                     | Specifies whether a ServiceAccount should be created | `false`                                                          |
+| `region`                                    | Specifies alibaba region                             | `false`                                                          |

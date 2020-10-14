@@ -30,3 +30,7 @@ serviceAccount:
 ##
 rbac:
   create: false
+
+## String to specify alibaba region
+##
+region: ""
